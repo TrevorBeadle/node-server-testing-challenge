@@ -1,8 +1,10 @@
+exports.up = async function(knex) {
+	await knex.schema.createTable("hobbits", (table) => {
+		table.increments()
+		table.text("name").notNullable()
+	})
+}
 
-exports.up = function(knex) {
-  
-};
-
-exports.down = function(knex) {
-  
-};
+exports.down = async function(knex) {
+	await knex.schema.dropTableIfExists("hobbits")
+}
