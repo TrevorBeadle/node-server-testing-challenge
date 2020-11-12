@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", validateID, async (req, res, next) => {
+router.get("/:id", validateID, async (req, res) => {
   res.json(req.hobbit);
 });
 
@@ -23,9 +23,16 @@ router.post("/", async (req, res, next) => {
 });
 
 router.delete("/:id", validateID, async (req, res, next) => {
-  const { id } = req.params;
   try {
-    res.json(await Hobbits.remove(id));
+    res.json(await Hobbits.remove(req.hobbit.id));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put("/:id", validateID, async (req, res, next) => {
+  try {
+    res.json(await Hobbits.update(req.hobbit.id, req.body));
   } catch (err) {
     next(err);
   }
@@ -36,9 +43,8 @@ async function validateID(req, res, next) {
   try {
     const hobbit = await Hobbits.findById(id);
     if (!hobbit) {
-      res.status(404).json({ message: "no hobbit found with that ID" });
+      return res.status(404).json({ message: "no hobbit found with that ID" });
     }
-
     req.hobbit = hobbit;
     next();
   } catch (err) {

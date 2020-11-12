@@ -53,11 +53,20 @@ describe("hobbits endpoint tests", () => {
     expect(res.body[2].name).toBe("merry");
   });
 
-  it('cannot delete hobbits twice', async () => {
-    await request(server).delete('/api/hobbits/3');
-    const res = await request(server).delete('/api/hobbits/3');
-    expect(res.status).toBe(400);
+  it("cannot delete hobbits twice", async () => {
+    await request(server).delete("/api/hobbits/3");
+    const res = await request(server).delete("/api/hobbits/3");
+    expect(res.status).toBe(404);
+    expect(res.type).toBe("application/json");
+    expect(res.body).toEqual({ message: "no hobbit found with that ID" });
+  });
+
+  it("updates hobbits names", async () => {
+    const res = await request(server)
+      .put("/api/hobbits/1")
+      .send({ name: "updated" });
+    expect(res.status).toBe(200);
     expect(res.type).toBe('application/json');
-    expect(res.body).toEqual({message: 'no hibbit found with that ID'})
-  })
+    expect(res.body.name).toBe('updated');
+  });
 });

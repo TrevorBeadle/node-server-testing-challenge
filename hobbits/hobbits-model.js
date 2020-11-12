@@ -18,9 +18,15 @@ async function remove(id) {
   return find();
 }
 
+async function update(id, data) {
+  await db("hobbits").update(data).where({ id });
+  return findById(id);
+}
+
 module.exports = {
   find,
   findById,
   create,
   remove,
+  update,
 };
