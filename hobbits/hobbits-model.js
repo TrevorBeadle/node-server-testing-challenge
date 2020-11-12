@@ -13,8 +13,14 @@ async function create(data) {
   return findById(id);
 }
 
+async function remove(id) {
+  await db("hobbits").del().where({ id });
+  return find();
+}
+
 module.exports = {
   find,
   findById,
   create,
+  remove,
 };
